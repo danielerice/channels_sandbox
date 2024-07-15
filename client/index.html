@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Orders Table</title>
+    <script>
+        async function getData() {
+            const url = "https://localhost:8000/orders/";
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+                }
+
+                const json = await response.json();
+                console.log(json);
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+    </script>
+    <script>  
+        function addOrder(order) {  
+            const orderList = document.getElementById("orders") ;
+            const row = document.createElement('tr');  
+            
+            row.innerHTML = "something"// html that displays specific order info, just like it 	already does
+            
+            if (orderList.firstChild) {  
+                orderList.insertBefore(row, orderList.firstChild);  
+            } else {  
+                orderList.appendChild(row);  
+            }  
+        } 
+        
+        var socket = new WebSocket('ws://' + window.location.host + '/ws/orders/') 
+        
+        // ‘/ws/orders/’ is the websocket endpoint and will be dependent on our 	setup 
+        
+        socket.onopen = function() {  
+        
+            // console log something 
+        } 
+        
+        socket.onmessage = function(e) {  
+        
+            var data = JSON.parse(e.data); // make DOM updates with data 
+        
+            addOrder(data) 
+        } 
+        
+        
+        
+        socket.onclose = function(event) {  
+        
+            if (event.wasClean) {  
+            
+            // console log something 
+            
+            } else {  
+            
+            // console log something else 
+            
+            } 
+        } 
+        
+        
+        
+        socket.onerror = function(error) { 
+        
+            // console log error 
+        
+        } 
+        
+        window.addEventListener('beforeunload', function() {  
+        
+            socket.close();  
+        
+            // console log something 
+        
+        })  
+    
+    </script> 
+  </head>
+  <body>
+    <form>
+        <input value="Name" type="text" id="name" size="10">
+        <input value="Desc" type="text" id="desc" size="10">
+        <button type="button" onclick="order()">Send</button>
+    </form>
+    <br>
+    <table style="border: 1px solid black">
+        <thead>
+            <tr>
+                <th style="border: 1px solid black">Name</th>
+                <th style="border: 1px solid black">Desc</th>
+                <th style="border: 1px solid black">ID</th>
+            </tr>  
+        </thead>
+    </table>
+  </body>
+</html>
