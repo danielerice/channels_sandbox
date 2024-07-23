@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Channels Sandbox</title>
+</head>
+<body>
+    <h1>Channels Sandbox</h1>
+
+    <script type="text/javascript">
+        let loc = window.location
+        let socketStart = 'ws://'
+
+
+        if(loc.protocol == 'https:'){
+            socketStart = 'wss://'
+        }
+        
+        var url = socketStart + window.location.host + window.location.pathname
+        var ws = new WebSocket(url)
+
+        ws.onopen = function(event) {
+            console.log("socket open : ", event)
+        }
+
+        ws.onmessage = function(event) {
+            console.log("new message : ", event)
+        }
+
+        ws.onclose = function(event) {
+            console.log("socket closed : ", event)
+        }
+
+        ws.onerror = function(event) {
+            console.log("error : ", event)
+        }
+    </script>
+</body>
+</html>
