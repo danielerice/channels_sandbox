@@ -7,6 +7,17 @@
 </head>
 <body>
     <h1>Channels Sandbox</h1>
+    <table id="table">
+        <caption>Orders</caption>
+        <tr>
+            <th>Name</th>
+            <th>Desc</th>
+        </tr>
+        <tr>
+            <td>example Name</td>
+            <td>example Desc</td>
+        </tr>
+    </table>
 
     <script type="text/javascript">
         let loc = window.location
@@ -26,6 +37,9 @@
 
         ws.onmessage = function(event) {
             console.log("new message : ", event)
+            var data = JSON.parse(event.data); // make DOM updates with data 
+            addOrder(data)
+
         }
 
         ws.onclose = function(event) {
@@ -35,6 +49,32 @@
         ws.onerror = function(event) {
             console.log("error : ", event)
         }
+
+        function addOrder(order) {  
+            console.log(order)
+
+            const orderList = document.getElementById('table')// find <tbody> DOM element 
+
+            const row = document.createElement('tr');  
+
+            row.innerHTML = `
+                <tr>
+                    <td>${order.content.name}</td>
+                    <td>${order.content.desc}</td>
+                </tr>
+            `
+
+            if (orderList.firstChild) {  
+                orderList.insertBefore(row, orderList.firstChild);  
+            } else {  
+                orderList.appendChild(row);  
+            }
+        } 
+
+        window.addEventListener('beforeunload', function() {  
+            console.log("before unload event hit, closing socket")
+            socket.close();   
+        })  
     </script>
 </body>
 </html>
